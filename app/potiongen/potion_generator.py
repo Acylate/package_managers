@@ -1,6 +1,3 @@
-
-
-
 class PotionGenerator:
     #c 1.13 по 1.19.4+
     
@@ -68,12 +65,12 @@ class PotionGenerator:
         return "CustomPotionEffects:[" + ",".join(effects_list) + "]"
         
         
-    def generate_command(self, type:str, effects:list[dict], no_particle:bool, potion_name:str="", description:str=""):
+    def generate_command(self, type:str, effects:list[dict], no_particle:bool=False, potion_name:str="", description:str=""):
         type_strings = {
-            "potion":"/give @p minecraft:potion{Potion:\"minecraft:water\",",
-            "splash_potion":"/give @p minecraft:splash_potion{Potion:\"minecraft:water\",",
-            "lingering_potion":"/give @p minecraft:lingering_potion{Potion:\"minecraft:water\",",
-            "tipped_arrow":"/give @p minecraft:tipped_arrow{Potion:\"minecraft:water\","
+            "potion_regular":"/give @p minecraft:potion{Potion:\"minecraft:water\",",
+            "potion_splash":"/give @p minecraft:splash_potion{Potion:\"minecraft:water\",",
+            "potion_lingering":"/give @p minecraft:lingering_potion{Potion:\"minecraft:water\",",
+            "potion_arrow":"/give @p minecraft:tipped_arrow{Potion:\"minecraft:water\","
         }
         
         potion_type = type_strings.get(type)
@@ -84,11 +81,3 @@ class PotionGenerator:
             potion_lore = f',display:{{Name:"\\"{potion_name}\\"",Lore:["\\"{description}\\""]}}}}'
         
         return potion_type + potion_effects + potion_lore
-        
-        
-PG = PotionGenerator()
-effects = [
-    {"effect_name":"slowness", "effect_level":5, "effect_duration":10},
-    {"effect_name":"strength", "effect_level":15, "effect_duration":5}
-]
-print(PG.generate_command("potion", effects, True, description="blublublu"))

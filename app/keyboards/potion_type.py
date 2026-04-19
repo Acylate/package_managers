@@ -1,12 +1,13 @@
-from aiogram.types import ReplyKeyboardMarkup
-from aiogram.types import KeyboardButton
+from aiogram.types import InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardButton
 
 
 def get_potion_type_keyboard():
-    
     kb = [
-        [KeyboardButton(text="Зелье"), KeyboardButton(text="Взрывное зелье")],
-        [KeyboardButton(text="Оседающее зелье"), KeyboardButton(text="Стрела")]
+        [InlineKeyboardButton(text="Зелье", callback_data="potion_regular")],
+        [InlineKeyboardButton(text="Взрывное зелье", callback_data="potion_splash")],
+        [InlineKeyboardButton(text="Оседающее зелье", callback_data="potion_lingering")],
+        [InlineKeyboardButton(text="Стрела", callback_data="potion_arrow")]
     ]
-    
-    return ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
+
+    return InlineKeyboardMarkup(inline_keyboard=kb)
