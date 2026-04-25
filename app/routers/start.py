@@ -1,3 +1,5 @@
+import sys
+
 from aiogram import F
 from aiogram.filters import BaseFilter
 from aiogram.types import Message, CallbackQuery
@@ -36,7 +38,7 @@ router_start = Router()
 @router_start.message(F.text == "/start")
 async def cmd_start(message: Message):
     await message.answer(
-        "Привет! Я генератор зелий, я могу тебе помочь с созданием любого зелья, просто выбери парочку эффектов и я дам тебе команду!",
+        "Привет!👋\n Я генератор зелий! Я могу тебе помочь с созданием любого зелья 🧪, просто выбери парочку эффектов и я дам тебе команду!",
         reply_markup=get_potion_type_keyboard()
     )
 
@@ -48,7 +50,7 @@ async def handle_potion_type(callback: CallbackQuery, state: FSMContext):
     await state.update_data(potion_type=potion_type, effects=[])
     
     await callback.message.edit_text(
-        "Отлично! Теперь выберите эффект для зелья:",
+        "Отлично! Теперь выберите ✨эффект✨ для зелья:",
         reply_markup=get_potion_effects_keyboard()
     )
     
@@ -62,7 +64,7 @@ async def handle_effect_selection(callback: CallbackQuery, state: FSMContext):
     await state.update_data(current_effect=effect_name)
     
     await callback.message.edit_text(
-        f"Вы выбрали эффект: `{effect_name}`. \n\nВведите уровень зелья (число):"
+        f"Вы выбрали эффект: `{effect_name}`. \n\nВведите уровень📈 зелья (число):"
     )
     
     await state.set_state(PotionFSM.input_level)
@@ -73,14 +75,14 @@ async def handle_level_input(message:Message, state:FSMContext):
     level = int(message.text)
     await state.update_data(current_level=level)
     
-    await message.answer("Введите длительность зелья (в секундах, -1 для бесконечного зелья):")
+    await message.answer("Введите длительность зелья ⏰(в секундах, -1 для бесконечного зелья):")
     await state.set_state(PotionFSM.input_duration)
     
 @router_start.message(PotionFSM.input_level)
 async def handle_invalid_level(message:Message):
-    await message.answer("Пожалуйста, отправьте число (от 1 до 128) для уровня зелья.")
+    await message.answer("Пожалуйста❗ отправьте число (от 1 до 128) для уровня зелья.")
     
-@router_start.message(PotionFSM.input_duration, NumberInRange(-1, sys.max))
+@router_start.message(PotionFSM.input_duration, NumberInRange(-1, sys.maxsize))
 async def handle_duration_input(message: Message, state: FSMContext):
     duration = int(message.text)
     
@@ -96,20 +98,20 @@ async def handle_duration_input(message: Message, state: FSMContext):
     await state.update_data(effects=effects, current_effect=None, current_level=None)
     
     await message.answer(
-        "Эффект сохранен!\nХотите добавить еще один эффект?",
+        "Эффект сохранен!\nХотите добавить еще один эффект? 🤔",
         reply_markup=get_more_potion_effects_keyboard()
     )
     await state.set_state(PotionFSM.ask_more_effects)
     
 @router_start.message(PotionFSM.input_duration)
 async def handle_invalid_duration(message:Message):
-    await message.answer("Пожалуйста, отправьте число (от -1) для длительности зелья.")
+    await message.answer("Пожалуйста❗ отправьте число (от -1) для длительности зелья.")
     
 @router_start.callback_query(PotionFSM.ask_more_effects, F.data.in_(["add_effect", "finish"]))
 async def handle_more_potion_effects(callback: CallbackQuery, state:FSMContext):
     if callback.data == "add_effect":
         await callback.message.edit_text(
-            "Выберите следующий эффект:",
+            "Выберите следующий эффект✨:",
             reply_markup=get_potion_effects_keyboard()
         )
         await state.set_state(PotionFSM.selecting_effect)
@@ -123,7 +125,7 @@ async def handle_more_potion_effects(callback: CallbackQuery, state:FSMContext):
         command = pg.generate_command(potion_type, effects)
         
         await callback.message.edit_text(
-            f"Зелье готово!\nВот ваша команда: <code>{command}</code>"
+            f"Зелье готово!\nВот ваша команда 😊: <code>{command}</code>"
         )
         await state.clear()
     

@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 async def main():
-    
+    print(Config.PROXY_PASSWORD)
     dp.include_router(router_start)
     await dp.start_polling(bot)
     
